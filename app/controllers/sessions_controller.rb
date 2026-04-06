@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     # ユーザーが存在するか、パスワードが正しいか確認（authenticateメソッドを使う）
     if user && user.authenticate(params[:session][:password])
       # 成功したらsessionにIDをセーブ（ログイン状態になる）
-      session[:user.id] = user.id
+      session[:user_id] = user.id
       redirect_to root_path, notice: "ログインしました。"
     else
       # 失敗したらエラーメッセージと一緒に改めてログイン画面を表示
