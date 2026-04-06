@@ -1,29 +1,55 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Word App" %></title>
+    <% # アプリケーションのタイトル %>
+    <title>Word App</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Word App">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
+    <% # Bootstrap CSS %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <% # ヘッダーナビゲーション %>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+      <div class="container">
+        <% # ロゴ兼ホームへのリンク %>
+        <a class="navbar-brand" href="/">Word App</a>
+        
+        <div class="navbar-nav ms-auto">
+          <% if logged_in? %>
+            <% # ログイン中の表示 %>
+            <span class="nav-link text-light"><%= current_user.name %> さん、ようこそ</span>
+            <% # ログアウトボタン %>
+            <%= link_to "ログアウト", logout_path, data: { "turbo-method": :delete }, class: "nav-link" %>
+          <% else %>
+            <% # 未ログイン時の表示 %>
+            <%= link_to "ログイン", login_path, class: "nav-link" %>
+            <%= link_to "新規登録", signup_path, class: "nav-link" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <% # メインコンテンツ %>
+    <main class="container">
+      <% # 通知メッセージ %>
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type == 'notice' ? 'success' : 'danger' %>">
+          <%= message %>
+        </div>
+      <% end %>
+
+      <% # 各ビューファイルの内容がここにインサートされる %>
+      <%= yield %>
+    </main>
+
+    <% # Bootstrap JS %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
