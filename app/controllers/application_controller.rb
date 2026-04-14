@@ -3,6 +3,16 @@ class ApplicationController < ActionController::Base
 
   private
 
+  # ログイン状態を確認し、ログインしていない場合ログインページへ移動
+  def logged_in_user
+    # logged_in?がfalseの場合
+    unless logged_in?
+      # エラーメッセージを含み、ログインページへ強制移動
+      flash[:alert] = "ログインが必要です。"
+      redirect_to login_url, status: :see_other
+    end
+  end
+
   # 現在ログイン中のユーザーオブジェクトを返すメソッド
   def current_user
     # @current_userに値があればそのまま使って、なければDBから探して代入
