@@ -1,0 +1,37 @@
+<%= form_with model: word, local: true do |f| %>
+  <% # エラーメッセージ %>
+  <% if word.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% word.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "単語", class: "form-label fw-bold" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "例：林檎" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :meaning, "意味・解説", class: "form-label fw-bold" %>
+    <%= f.text_field :meaning, class: "form-control", placeholder: "例：バラ科の落葉高木。赤い実がなる。" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :tag_id, "タグ選択", class: "form-label fw-bold" %>
+    <%= f.collection_select :tag_id, Tag.all, :id, :name, 
+      { prompt: "タグを選択してください" }, { class: "form-select" } %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :note, "メモ", class: "form-label fw-bold" %>
+    <%= f.text_area :note, class: "form-control", rows: 3 %>
+  </div>
+
+  <div class="d-grid gap-2">
+    <%= f.submit "保存する", class: "btn btn-primary btn-lg" %>
+  </div>
+<% end %>

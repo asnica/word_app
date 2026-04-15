@@ -1,0 +1,67 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">単語タグマスタ</h2>
+    <%= link_to "メニューへ戻る", root_path, class: "btn btn-outline-secondary" %>
+  </div>
+
+  <% if @tag.errors.any? %>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      <% @tag.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+  
+  <% # 新規登録セクション %>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-light">
+      <span class="fw-bold">新規タグ登録</span>
+    </div>
+    <div class="card-body">
+      <%= form_with model: Tag.new, local: true, class: "row g-3" do |f| %>
+        <div class="col-auto">
+          <%= f.text_field :name, class: "form-control", placeholder: "タグ名を入力" %>
+        </div>
+        <div class="col-auto">
+          <%= f.submit "登録", class: "btn btn-success" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <% # 検索セクション %>
+  <%= form_with url: tags_path, method: :get, local: true, class: "mb-4" do |f| %>
+    <div class="input-group">
+      <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "タグ名で検索（曖昧検索）" %>
+      <%= f.submit "検索", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <% # 一覧テーブル %>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle bg-white border">
+      <thead class="table-light">
+        <tr>
+          <th>タグ名</th>
+          <th class="text-end">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @tags.each do |tag| %>
+          <tr>
+            <td class="fw-bold"><%= tag.name %></td>
+            <td class="text-end">
+              <% # 作成者のみ編集・削除ボタンを表示 %>
+              <% if tag.user == current_user %>
+                <%= link_to "編集", edit_tag_path(tag), class: "btn btn-sm btn-outline-primary me-1" %>
+                <%= link_to "削除", tag_path(tag), data: { "turbo-method": :delete, "turbo-confirm": "本当に削除しますか？" }, class: "btn btn-sm btn-outline-danger" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
