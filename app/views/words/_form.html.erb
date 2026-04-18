@@ -12,18 +12,42 @@
 
   <div class="mb-3">
     <%= f.label :name, "単語", class: "form-label fw-bold" %>
-    <%= f.text_field :name, class: "form-control", placeholder: "例：林檎" %>
+    <%= f.text_field :name, class: "form-control" %>
   </div>
 
   <div class="mb-3">
-    <%= f.label :meaning, "意味・解説", class: "form-label fw-bold" %>
-    <%= f.text_field :meaning, class: "form-control", placeholder: "例：バラ科の落葉高木。赤い実がなる。" %>
+    <%= f.label :meaning, "意味", class: "form-label fw-bold" %>
+    <%= f.text_field :meaning, class: "form-control" %>
   </div>
 
   <div class="mb-3">
-    <%= f.label :tag_id, "タグ選択", class: "form-label fw-bold" %>
-    <%= f.collection_select :tag_id, Tag.all, :id, :name, 
-      { prompt: "タグを選択してください" }, { class: "form-select" } %>
+    <%= f.label :synonym, "類義語", class: "form-label fw-bold" %>
+    <%= f.select :synonym, options_for_select(@word.synonym.to_s.split(','), @word.synonym.to_s.split(',')), {}, 
+        { 
+          multiple: true, 
+          class: "form-control", 
+          data: { 
+            controller: "select", 
+            "select-create-value": "true", 
+            "select-placeholder-value": "類義語を入力してEnter..." 
+          } 
+        } 
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :tag_ids, "タグ選択", class: "form-label fw-bold" %>
+    <%= f.collection_select :tag_ids, Tag.all, :id, :name, {}, 
+        { 
+          multiple: true, 
+          class: "form-control", 
+          data: { controller: "select",
+          "select-create-value": "false",
+          "select-placeholder-value": "タグを検索..."
+          } 
+        } 
+    %>
+    <div class="form-text">キーワードを入力してタグを検索できます。</div>
   </div>
 
   <div class="mb-4">
@@ -31,7 +55,7 @@
     <%= f.text_area :note, class: "form-control", rows: 3 %>
   </div>
 
-  <div class="d-grid gap-2">
+  <div class="d-grid">
     <%= f.submit "保存する", class: "btn btn-primary btn-lg" %>
   </div>
 <% end %>
