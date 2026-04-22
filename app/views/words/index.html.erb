@@ -4,7 +4,6 @@
     <%= link_to "新規単語登録", new_word_path, class: "btn btn-success" %>
   </div>
 
-  <% # 検索セクション %>
   <%= form_with url: words_path, method: :get, local: true, class: "mb-4" do |f| %>
     <div class="input-group shadow-sm">
       <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "単語名で検索（曖昧検索）" %>
@@ -15,27 +14,35 @@
     </div>
   <% end %>
 
-  <% # 単語カード一覧 %>
   <div class="row g-3">
     <% if @words.any? %>
       <% @words.each do |word| %>
         <div class="col-md-6 col-lg-4">
           <div class="card h-100 shadow-sm border-0 bg-light">
             <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <h5 class="card-title fw-bold text-primary mb-0"><%= word.name %></h5>
-                <% # タグ表示 %>
-                  <div class="d-flex flex-wrap gap-1 mb-2">
-                  <% if word.tags.any? %>
-                    <% word.tags.each do |tag| %>
-                      <span class="badge bg-info text-dark">
-                        <%= tag.name %>
-                      </span>
-                    <% end %>
-                  <% else %>
-                    <span class="badge bg-secondary">タグなし</span>
-                  <% end %>
+              
+              <div class="d-flex align-items-center mb-3">
+                <% if word.image.attached? %>
+                  <%= image_tag word.image, class: "rounded me-3 shadow-sm", style: "width: 60px; height: 60px; object-fit: cover;" %>
+                <% else %>
+                  <div class="bg-secondary bg-opacity-25 rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <i class="bi bi-image text-muted"></i>
+                  </div>
+                <% end %>
+
+                <div class="ms-1">
+                  <h5 class="card-title fw-bold mb-0"><%= word.name %></h5>
                 </div>
+              </div>
+                
+              <div class="d-flex flex-wrap gap-1 mb-2">
+                <% if word.tags.any? %>
+                  <% word.tags.each do |tag| %>
+                    <span class="badge bg-info text-dark"><%= tag.name %></span>
+                  <% end %>
+                <% else %>
+                  <span class="badge bg-secondary">タグなし</span>
+                <% end %>
               </div>
 
               <div class="text-muted mb-3" style="font-size: 0.8rem;">
@@ -48,18 +55,12 @@
                 <strong>意味：</strong><%= word.meaning %>
               </p>
               
-              <% if word.note.present? %>
-                <p class="card-text text-muted" style="font-size: 0.85rem;">
-                  <small><%= word.note %></small>
-                </p>
-              <% end %>
             </div>
             
             <div class="card-footer bg-transparent border-0 text-end pb-3">
               <%= link_to "詳細", word_path(word), class: "btn btn-sm btn-link text-decoration-none" %>
               
               <% if word.user == current_user %>
-                <% # 編集ボタンを btn-outline-primary に統一 %>
                 <%= link_to "編集", edit_word_path(word), class: "btn btn-sm btn-outline-primary" %>
                 <%= link_to "削除", word_path(word), data: { "turbo-method": :delete, "turbo-confirm": "本当に削除しますか？" }, class: "btn btn-sm btn-outline-danger" %>
               <% end %>
