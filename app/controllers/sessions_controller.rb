@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :logged_in_user, only: [:destroy]
+
   def new
     # ログイン画面を見せる
   end
@@ -23,6 +25,6 @@ class SessionsController < ApplicationController
     # sessionからユーザーIDを消す（ログアウト）
     session.delete(:user_id)
     @current_user = nil
-    redirect_to root_path, notice: "ログアウトしました。"
+    redirect_to login_path, status: :see_other, notice: "ログアウトしました。"
   end
 end

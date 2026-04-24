@@ -1,41 +1,56 @@
-<% # ユーザー登録画面のメイン見出し %>
-<h1>ユーザー登録</h1>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm mt-5">
+      <div class="card-header bg-success text-white text-center py-3">
+        <h3 class="mb-0 fw-bold">新規登録</h3>
+      </div>
 
-<%= form_with model: @user, local: true do |f| %>
-
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= @user.errors.count %>件のエラーが発生しました。</h2>
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+      <div class="card-body p-4">
+        <% # Validation失敗の際エラーメッセージ表示 %>
+        <% if @user.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
-      </ul>
+
+        <%= form_with model: @user, local: true do |f| %>
+          
+          <div class="mb-3">
+            <%= f.label :name, "お名前", class: "form-label fw-bold" %>
+            <%= f.text_field :name, class: "form-control", placeholder: "田中 太郎" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :email, "メールアドレス", class: "form-control-label fw-bold" %>
+            <%= f.email_field :email, class: "form-control", placeholder: "example@test.com" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :password, "パスワード", class: "form-label fw-bold" %>
+            <%= f.password_field :password, class: "form-control", placeholder: "6文字以上で入力してください" %>
+          </div>
+
+          <div class="mb-4">
+            <%= f.label :password_confirmation, "パスワード（確認）", class: "form-label fw-bold" %>
+            <%= f.password_field :password_confirmation, class: "form-control", placeholder: "もう一度入力してください" %>
+          </div>
+
+          <div class="d-grid">
+            <%= f.submit "登録する", class: "btn btn-success btn-lg" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="card-footer text-center py-3 bg-light">
+        <p class="mb-0 text-muted">
+          すでにアカウントをお持ちですか？ 
+          <%= link_to "ログインはこちら", login_path, class: "text-success fw-bold text-decoration-none" %>
+        </p>
+      </div>
     </div>
-  <% end %>
-
-  <div>
-    <%= f.label :name, "名前" %>
-    <%= f.text_field :name %>
   </div>
-
-  <div>
-    <%= f.label :email, "メールアドレス" %>
-    <%= f.email_field :email %>
-  </div>
-
-  <div>
-    <%= f.label :password, "パスワード" %>
-    <%= f.password_field :password %>
-  </div>
-
-  <div>
-    <%= f.label :password_confirmation, "パスワード（確認）" %>
-    <%= f.password_field :password_confirmation %>
-  </div>
-
-  <div>
-    <%= f.submit "登録する" %>
-  </div>
-
-<% end %>
+</div>
