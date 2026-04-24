@@ -20,6 +20,7 @@ class WordsController < ApplicationController
   end
 
   def create
+    params[:word][:synonym] = params[:word][:synonym].join(',') if params[:word][:synonym].is_a?(Array)
     @word = current_user.words.build(word_params)
     if @word.save
       redirect_to words_path, notice: "単語を登録しました。"
@@ -33,6 +34,8 @@ class WordsController < ApplicationController
   end
 
   def update
+    params[:word][:synonym] = params[:word][:synonym].join(',') if params[:word][:synonym].is_a?(Array)
+    @word = Word.find(params[:id])
     if @word.update(word_params)
       redirect_to words_path, notice: "単語を更新しました。"
     else
@@ -48,7 +51,7 @@ class WordsController < ApplicationController
   private
 
   def word_params
-    params.require(:word).permit(:name, :meaning, :note, :tag_id)
+    params.require(:word).permit(:name, :meaning, :note, :synonym, tag_ids: [], synonym: [])
   end
 
   def correct_user

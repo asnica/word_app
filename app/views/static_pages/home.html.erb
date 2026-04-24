@@ -1,38 +1,53 @@
 <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
   <div class="container-fluid py-5 text-center">
-    <% # メインタイトル (메인 타이틀) %>
+    <% # メインタイトル %>
     <h1 class="display-5 fw-bold">Word Appへようこそ</h1>
     <p class="col-md-12 fs-4 text-muted">下記のメニューよりクリックしてください。</p>
   </div>
 </div>
 
 <div class="row g-4">
+
+  <% # 1. 単語検索・登録 %>
   <div class="col-md-4">
     <div class="card h-100 shadow-sm border-primary">
-      <div class="card-body text-center">
+      <div class="card-body text-center d-flex flex-column p-4">
         <h5 class="card-title fw-bold">単語検索・登録</h5>
-        <p class="card-text text-secondary">新しい単語を追加したり検索したりできます。</p>
-        <%= link_to "管理画面へ", "#", class: "btn btn-outline-primary w-100" %>
+        <p class="card-text text-secondary mb-4 small">単語やタグを効率的に管理しましょう。</p>
+        <div class="d-flex gap-2 mt-auto w-100">
+          <%= link_to tags_path, class: "btn btn-outline-primary flex-fill shadow-sm" do %>
+            タグマスター
+          <% end %>
+          <%= link_to words_path, class: "btn btn-primary flex-fill shadow-sm" do %>
+            単語マスター
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
 
+  <% # 2. 問題集 %>
   <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <div class="card-body text-center">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body text-center d-flex flex-column p-4">
         <h5 class="card-title fw-bold">問題集</h5>
-        <p class="card-text text-secondary">登録した単語から問題が作成されます。</p>
-        <%= link_to "スタート", "#", class: "btn btn-primary w-100" %>
+        <p class="card-text text-secondary mb-4 small">登録した単語から問題が作成されます。</p>
+        <div class="mt-auto w-100">
+          <%= link_to "スタート", "#", class: "btn btn-primary w-100 shadow-sm" %>
+        </div>
       </div>
     </div>
   </div>
 
+  <% # 3. ランキング %>
   <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <div class="card-body text-center">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body text-center d-flex flex-column p-4">
         <h5 class="card-title fw-bold">ランキング</h5>
-        <p class="card-text text-secondary">他のユーザーの学習状況を確認します。</p>
-        <%= link_to "ランキングを見る", "#", class: "btn btn-secondary w-100" %>
+        <p class="card-text text-secondary mb-4 small">他のユーザーの学習状況を確認します。</p>
+        <div class="mt-auto w-100">
+          <%= link_to "ランキングを見る", "#", class: "btn btn-secondary w-100 shadow-sm" %>
+        </div>
       </div>
     </div>
   </div>
