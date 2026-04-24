@@ -55,6 +55,48 @@
     <%= f.text_area :note, class: "form-control", rows: 3 %>
   </div>
 
+  <div class="mb-3" data-controller="image-preview">
+    <%= f.label :image, "画像添付", class: "form-label fw-bold" %>
+
+    <div class="mb-2 d-flex align-items-end gap-3">
+      <% if f.object.image.attached? && f.object.image.persisted? %>
+        <%= image_tag f.object.image, 
+                      data: { image_preview_target: "preview" }, 
+                      class: "rounded shadow-sm border", 
+                      style: "width: 100px; height: 100px; object-fit: cover;" %>
+      <% else %>
+        <img data-image-preview-target="preview" 
+            src=""
+            class="d-none rounded shadow-sm border" 
+            style="width: 100px; height: 100px; object-fit: cover;">
+      <% end %>
+
+      <button type="button" 
+              data-image-preview-target="cancelButton" 
+              data-action="click->image-preview#reset" 
+              class="btn btn-sm btn-outline-secondary d-none">
+        選択を解除
+      </button>
+    </div>
+
+    <% if f.object.image.attached? && f.object.image.persisted? %>
+      <div class="form-check mb-2">
+        <%= f.check_box :remove_image, class: "form-check-input" %>
+        <%= f.label :remove_image, "現在の画像を削除する", class: "form-check-label small text-danger" %>
+      </div>
+    <% end %>
+
+    <%= f.file_field :image, 
+                    class: "form-control", 
+                    accept: 'image/jpg,image/jpeg,image/png,image/gif',
+                    data: { 
+                      image_preview_target: "input", 
+                      action: "change->image-preview#preview" 
+                    } %>
+    
+    <div class="form-text">jpg, png, gif形式の画像を選択してください。</div>
+  </div>
+  
   <div class="d-grid">
     <%= f.submit "保存する", class: "btn btn-primary btn-lg" %>
   </div>
