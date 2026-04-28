@@ -53,12 +53,19 @@
           <p class="bg-light p-3 rounded mb-0"><%= @word.note.presence || "メモはありません" %></p>
         </div>
         
-        <% if @word.user == current_user %>
-          <div class="card-footer text-end bg-white border-top-0 p-4">
+        <div class="card-footer text-end bg-white border-top-0 p-4">
+          <% is_mine = (@word.user == current_user) %>
+
+          <% if is_mine %>
             <%= link_to '編集', edit_word_path(@word), class: 'btn btn-outline-primary me-2' %>
             <%= link_to '削除', word_path(@word), data: { "turbo-method": :delete, "turbo-confirm": "本当に削除しますか？" }, class: 'btn btn-outline-danger' %>
-          </div>
-        <% end %>
+          <% else %>
+            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="作成者のみ編集・削除可能です。">
+              <button class="btn btn-outline-secondary me-2" disabled style="pointer-events: none;">編集</button>
+              <button class="btn btn-outline-secondary" disabled style="pointer-events: none;">削除</button>
+            </span>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

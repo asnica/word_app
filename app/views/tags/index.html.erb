@@ -53,10 +53,16 @@
           <tr>
             <td class="fw-bold"><%= tag.name %></td>
             <td class="text-end">
-              <% # 作成者のみ編集・削除ボタンを表示 %>
-              <% if tag.user == current_user %>
+              <% is_mine = (tag.user == current_user) %>
+
+              <% if is_mine %>
                 <%= link_to "編集", edit_tag_path(tag), class: "btn btn-sm btn-outline-primary me-1" %>
                 <%= link_to "削除", tag_path(tag), data: { "turbo-method": :delete, "turbo-confirm": "本当に削除しますか？" }, class: "btn btn-sm btn-outline-danger" %>
+              <% else %>
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="作成者のみ編集・削除可能です。">
+                  <button class="btn btn-sm btn-outline-secondary me-1" disabled style="pointer-events: none;">編集</button>
+                  <button class="btn btn-sm btn-outline-secondary" disabled style="pointer-events: none;">削除</button>
+                </span>
               <% end %>
             </td>
           </tr>

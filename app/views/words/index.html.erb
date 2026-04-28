@@ -59,10 +59,17 @@
             
             <div class="card-footer bg-transparent border-0 text-end pb-3">
               <%= link_to "詳細", word_path(word), class: "btn btn-sm btn-link text-decoration-none" %>
+
+              <% is_mine = (word.user == current_user) %>
               
-              <% if word.user == current_user %>
+              <% if is_mine %>
                 <%= link_to "編集", edit_word_path(word), class: "btn btn-sm btn-outline-primary" %>
                 <%= link_to "削除", word_path(word), data: { "turbo-method": :delete, "turbo-confirm": "本当に削除しますか？" }, class: "btn btn-sm btn-outline-danger" %>
+              <% else %>
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="作成者のみ編集・削除可能です。">
+                  <button class="btn btn-sm btn-outline-secondary me-1" disabled style="pointer-events: none;">編集</button>
+                  <button class="btn btn-sm btn-outline-secondary" disabled style="pointer-events: none;">削除</button>
+                </span>
               <% end %>
             </div>
           </div>
