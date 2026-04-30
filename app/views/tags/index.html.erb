@@ -4,28 +4,39 @@
     <%= link_to "メニューへ戻る", root_path, class: "btn btn-outline-secondary" %>
   </div>
 
-  <% if @tag.errors.any? %>
-  <div class="alert alert-danger">
-    <ul class="mb-0">
-      <% @tag.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-  
-  <% # 新規登録セクション %>
-  <div class="card mb-4 shadow-sm">
-    <div class="card-header bg-light">
-      <span class="fw-bold">新規タグ登録</span>
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
     </div>
+  <% end %>
+
+  <% # 新規タグ一括登録 %>
+  <div class="card mb-4 shadow-sm border-primary">
+    <div class="card-header bg-primary text-white fw-bold">新規タグ一括登録</div>
     <div class="card-body">
-      <%= form_with model: Tag.new, local: true, class: "row g-3" do |f| %>
-        <div class="col-auto">
-          <%= f.text_field :name, class: "form-control", placeholder: "タグ名を入力" %>
+      <%= form_with model: @user, url: update_tags_tags_path, method: :patch, local: true do |f| %>
+        <div id="tags-form">
+          <%= f.fields_for :tags do |tag_f| %>
+            <% if tag_f.object.new_record? %>
+              <%= render 'tag_fields', f: tag_f %>
+            <% end %>
+          <% end %>
+
+          <div class="links mt-2">
+            <%= link_to_add_association "+ タグを追加", f, :tags, 
+                                        class: "btn btn-sm btn-secondary",
+                                        data: { 
+                                          association_insertion_node: '#tags-form', 
+                                          association_insertion_method: 'append' 
+                                        } %>
+          </div>
         </div>
-        <div class="col-auto">
-          <%= f.submit "登録", class: "btn btn-success" %>
+        <div class="text-end mt-3">
+          <%= f.submit "まとめて保存", class: "btn btn-success" %>
         </div>
       <% end %>
     </div>

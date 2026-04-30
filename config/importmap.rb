@@ -8,3 +8,5 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
 pin_all_from "app/javascript/controllers", under: "controllers"
 
 pin "tom-select", to: "https://ga.jspm.io/npm:tom-select@2.4.1/dist/js/tom-select.complete.js"
+pin "jquery" # @4.0.0
+pin "cocoon" # @0.1.1
