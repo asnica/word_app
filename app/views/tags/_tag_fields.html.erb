@@ -1,8 +1,13 @@
-<div class="nested-fields row g-2 mb-2 align-items-center">
+<div class="wrapper-nested-fields row g-2 mb-3 align-items-center">
+  
   <div class="col-auto">
-    <%= f.text_field :name, class: "form-control form-control-sm", placeholder: "タグ名を入力" %>
+    <%= form.text_field :name, class: "form-control form-control-sm", placeholder: "タグ名を入力" %>
   </div>
+
   <div class="col-auto">
-    <%= link_to_remove_association "削除", f, class: "btn btn-sm btn-outline-danger" %>
+    <%= link_to_remove_nested form, 
+                              link_text: "削除", 
+                              link_classes: "btn btn-sm btn-outline-danger",
+                              fields_wrapper_selector: ".wrapper-nested-fields" %>
   </div>
 </div>

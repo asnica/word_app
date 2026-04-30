@@ -14,27 +14,25 @@
     </div>
   <% end %>
 
-  <% # 新規タグ一括登録 %>
   <div class="card mb-4 shadow-sm border-primary">
     <div class="card-header bg-primary text-white fw-bold">新規タグ一括登録</div>
     <div class="card-body">
       <%= form_with model: @user, url: update_tags_tags_path, method: :patch, local: true do |f| %>
+        <div class="links mb-4">
+          <%= link_to_add_nested f, :tags, "#tags-form",
+                                 link_text: "+ タグを追加",
+                                 link_classes: "btn btn-sm btn-secondary",
+                                 partial_form_variable: :form %>
+        </div>
+        
         <div id="tags-form">
           <%= f.fields_for :tags do |tag_f| %>
             <% if tag_f.object.new_record? %>
-              <%= render 'tag_fields', f: tag_f %>
+              <%= render 'tag_fields', form: tag_f %>
             <% end %>
           <% end %>
-
-          <div class="links mt-2">
-            <%= link_to_add_association "+ タグを追加", f, :tags, 
-                                        class: "btn btn-sm btn-secondary",
-                                        data: { 
-                                          association_insertion_node: '#tags-form', 
-                                          association_insertion_method: 'append' 
-                                        } %>
-          </div>
         </div>
+        
         <div class="text-end mt-3">
           <%= f.submit "まとめて保存", class: "btn btn-success" %>
         </div>

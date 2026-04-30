@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_025623) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_30_055712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,7 +73,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_025623) do
     t.string "name"
     t.text "note"
     t.string "synonym"
-    t.string "tag"
+    t.string "tag_id"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_words_on_user_id"

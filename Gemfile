@@ -43,7 +43,7 @@ gem "image_processing", "~> 1.2"
 # Active Storage 파일 유효성 검사
 gem 'active_storage_validations'
 
-gem 'cocoon'
+gem 'vanilla_nested'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
