@@ -9,3 +9,4 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 
 pin "tom-select", to: "https://ga.jspm.io/npm:tom-select@2.4.1/dist/js/tom-select.complete.js"
 pin "vanilla-nested", to: "vanilla_nested.js", preload: true
+pin "@notus.sh/cocooned", to: "@notus.sh--cocooned.js" # @3.0.1
