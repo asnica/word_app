@@ -3,11 +3,12 @@ class WordsController < ApplicationController
   before_action :correct_user, only: [:edit, :update, :destroy]
 
   def index
-    if params[:query].present?
-      # 単語名の曖昧検索
-      @words = Word.where("name LIKE ?", "%#{params[:query]}%")
-    else
-      @words = Word.all
+    @words = Word.search(params).order(created_at: :desc)
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data @words.to_csv, filename: "word_master_#{Time.zone.now.strftime('%Y%m%d%H%M')}.csv"
+      end
     end
   end
 

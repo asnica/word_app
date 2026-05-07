@@ -1,16 +1,32 @@
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">単語一覧</h2>
-    <%= link_to "新規単語登録", new_word_path, class: "btn btn-success" %>
+    <div class="d-flex gap-2">
+      <%= link_to words_path(params: params.permit(:query, :tag_id), format: :csv), class: "btn btn-outline-success d-flex align-items-center" do %>
+        <i class="bi bi-file-earmark-arrow-down me-1"></i> CSV出力
+      <% end %>
+      <%= link_to "新規単語登録", new_word_path, class: "btn btn-success" %>
+    </div>
   </div>
 
   <%= form_with url: words_path, method: :get, local: true, class: "mb-4" do |f| %>
-    <div class="input-group shadow-sm">
-      <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "単語名で検索（曖昧検索）" %>
-      <%= f.submit "検索", class: "btn btn-primary" %>
-      <% if params[:query].present? %>
-        <%= link_to "クリア", words_path, class: "btn btn-outline-secondary" %>
-      <% end %>
+    <div class="row g-2 shadow-sm p-3 bg-white rounded border">
+      <div class="col-md-6">
+        <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "単語名もしくは意味で検索" %>
+      </div>
+      <div class="col-md-4">
+        <%= f.collection_select :tag_id, Tag.all, :id, :name, 
+                                { include_blank: "すべてのタグ", selected: params[:tag_id] }, 
+                                { class: "form-select" } %>
+      </div>
+      <div class="col-md-2 d-grid">
+        <div class="btn-group">
+          <%= f.submit "検索", class: "btn btn-primary" %>
+          <% if params[:query].present? || params[:tag_id].present? %>
+            <%= link_to "クリア", words_path, class: "btn btn-outline-secondary" %>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
 
