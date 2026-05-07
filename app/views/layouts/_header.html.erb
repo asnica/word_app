@@ -5,7 +5,7 @@
     <div class="navbar-nav ms-auto">
       <ul class="navbar-nav align-items-lg-center">
         <li class="nav-item"><%= link_to "単語タグマスタ", tags_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "単語マスタ", words_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "単語マスタ", words_path, data: { turbo: false }, class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "問題集", "#", class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "ランキング", "#", class: "nav-link" %></li>
 

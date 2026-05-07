@@ -54,13 +54,16 @@
       <thead class="table-light">
         <tr>
           <th>タグ名</th>
-          <th class="text-end">操作</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <% @tags.each do |tag| %>
           <tr>
-            <td class="fw-bold"><%= tag.name %></td>
+            <td class="fw-bold"><%= link_to tag.name, 
+                                            words_path(search_scope: 'all', tag_ids: [tag.id]), 
+                                            data: { turbo: false },
+                                            class: "text-decoration-none text-primary fw-bold" %></td>
             <td class="text-end">
               <% is_mine = (tag.user == current_user) %>
 
