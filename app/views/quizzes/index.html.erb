@@ -1,0 +1,83 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-0">問題集ダッシュボード</h2>
+      <p class="text-muted">自分の実力を試してみましょう！</p>
+    </div>
+    <%= button_to quizzes_path, method: :post, class: "btn btn-primary btn-lg shadow-sm d-flex align-items-center" do %>
+      <i class="bi bi-plus-circle me-2"></i> 新しく単語帳を始める
+    <% end %>
+  </div>
+
+  <div class="row g-4">
+    <% if @quizzes.any? %>
+      <% @quizzes.each_with_index do |quiz, index| %>
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm border-0 bg-light">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="text-muted small">#<%= @quizzes.length - index %> 回目の挑戦</span>
+                <% if quiz.ongoing? %>
+                  <span class="badge bg-warning text-dark">学習中</span>
+                <% else %>
+                  <span class="badge bg-success">完了</span>
+                <% end %>
+              </div>
+
+              <h5 class="card-title fw-bold mb-3">
+                <i class="bi bi-journal-text me-2"></i>
+                <%= quiz.created_at.strftime('%Y/%m/%d %H:%M') %>
+              </h5>
+
+              <div class="mb-4">
+                <% if quiz.ongoing? %>
+                  <p class="mb-1 small text-muted">進行状況</p>
+                  <div class="progress" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                         style="width: <%= (quiz.current_question_index.to_f / 10 * 100).to_i %>%"></div>
+                  </div>
+                  <p class="mt-1 small text-end"><%= quiz.current_question_index %> / 10 問</p>
+                <% else %>
+                  <div class="bg-white rounded p-3 text-center border">
+                    <p class="mb-0 text-muted small">最終スコア</p>
+                    <h3 class="fw-bold text-primary mb-0"><%= quiz.total_score || 0 %> <span class="small text-muted">/ 10</span></h3>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="card-footer bg-white border-0 pb-3">
+              <div class="d-grid gap-2">
+                <% if quiz.ongoing? %>
+                  <%= link_to quiz_path(quiz), class: "btn btn-outline-primary w-100" do %>
+                    <i class="bi bi-play-fill"></i> 続きから
+                  <% end %>
+                <% else %>
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <%= button_to restart_quiz_path(quiz), method: :post, class: "btn btn-outline-secondary btn-sm w-100" do %>
+                        <i class="bi bi-arrow-clockwise"></i> もう一度
+                      <% end %>
+                    </div>
+                    <div class="col-6">
+                      <%= link_to quiz_path(quiz), class: "btn btn-outline-info btn-sm w-100" do %>
+                        <i class="bi bi-eye"></i> 回答表示
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-12 text-center py-5">
+        <div class="mb-3">
+          <i class="bi bi-clipboard-check text-muted" style="font-size: 4rem;"></i>
+        </div>
+        <p class="text-muted">まだ挑戦した問題集がありません。<br>上のボタンから新しい問題に挑戦してみましょう！</p>
+      </div>
+    <% end %>
+  </div>
+</div>

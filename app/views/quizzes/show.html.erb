@@ -1,0 +1,51 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="fw-bold">第 <%= @quiz.current_question_index + 1 %> 問 / 10</span>
+        <span class="text-muted"><%= (@quiz.current_question_index + 1) * 10 %>% 完了</span>
+      </div>
+      <div class="progress mb-4" style="height: 8px;">
+        <div class="progress-bar bg-primary" style="width: <%= (@quiz.current_question_index + 1) * 10 %>%"></div>
+      </div>
+
+      <div class="card shadow-sm border-0 p-4 mb-4 text-center bg-light">
+        <h1 class="display-4 fw-bold text-primary mb-0"><%= @quiz_item.word.name %></h1>
+
+        <% if @quiz_item.word.synonym.present? %>
+          <% clean_synonym = @quiz_item.word.synonym.to_s.split(',').map(&:strip).reject(&:blank?).join(', ') %>
+          <div class="mt-4">
+            <span class="badge bg-white text-secondary border fw-normal py-2 px-4 shadow-sm" style="font-size: 1.1rem;">
+                <i class="bi bi-intersect me-2"></i>
+                類義語: <%= clean_synonym %>
+            </span>
+          </div>
+        <% end %>
+
+        <p class="text-muted mt-4 mb-0" style="font-size: 1.1rem;">この単語の意味を選んでください</p>
+      </div>
+
+      <div class="d-grid gap-3">
+        <% @quiz_item.choices.each do |choice| %>
+          <button class="btn btn-white btn-lg border shadow-sm py-3 text-start hover-shadow">
+            <i class="bi bi-circle me-2 text-secondary"></i>
+            <%= choice %>
+          </button>
+        <% end %>
+      </div>
+
+      <div class="mt-5 text-center">
+        <%= link_to quizzes_path, class: "text-muted text-decoration-none" do %>
+          <i class="bi bi-x-lg"></i> 中断して戻る
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .btn-white { background: #fff; transition: all 0.2s; }
+  .btn-white:hover { background: #f8f9fa; border-color: #0d6efd !important; color: #0d6efd; }
+</style>

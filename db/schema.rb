@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_30_055712) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_07_084618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_30_055712) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "quiz_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "is_correct"
+    t.integer "position"
+    t.bigint "quiz_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "word_id", null: false
+    t.index ["quiz_id"], name: "index_quiz_items_on_quiz_id"
+    t.index ["word_id"], name: "index_quiz_items_on_word_id"
+  end
+
+  create_table "quizzes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "current_question_index"
+    t.integer "status"
+    t.integer "total_score"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -81,6 +102,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_30_055712) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "quiz_items", "quizzes"
+  add_foreign_key "quiz_items", "words"
+  add_foreign_key "quizzes", "users"
   add_foreign_key "tags", "users"
   add_foreign_key "word_tags", "tags"
   add_foreign_key "word_tags", "words"
