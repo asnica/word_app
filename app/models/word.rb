@@ -15,6 +15,7 @@ class Word < ApplicationRecord
 
   def self.search(params)
     words = all.includes(:tags)
+
     if params[:query].present?
       q = "%#{params[:query]}%"
       case params[:search_scope]
@@ -29,8 +30,11 @@ class Word < ApplicationRecord
       end
     end
 
-    if params[:tag_id].present?
-      words = words.joins(:word_tags).where(word_tags: { tag_id: params[:tag_id] })
+    if params[:tag_ids].present?
+      clean_tag_ids = params[:tag_ids].reject(&:blank?)
+      if clean_tag_ids.any?
+        words = words.joins(:tags).where(tags: { id: clean_tag_ids })
+      end
     end
 
     words.distinct

@@ -2,14 +2,14 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">単語一覧</h2>
     <div class="d-flex gap-2">
-      <%= link_to words_path(params: params.permit(:query, :tag_id, :search_scope), format: :csv), class: "btn btn-outline-success d-flex align-items-center" do %>
+      <%= link_to words_path(params: params.permit(:query, :search_scope, tag_ids: []), format: :csv), class: "btn btn-outline-success d-flex align-items-center" do %>
         <i class="bi bi-file-earmark-arrow-down me-1"></i> CSV出力
       <% end %>
       <%= link_to "新規単語登録", new_word_path, class: "btn btn-success" %>
     </div>
   </div>
 
-  <%= form_with url: words_path, method: :get, local: true, class: "mb-4" do |f| %>
+  <%= form_with url: words_path, method: :get, local: true, data: { turbo: false }, class: "mb-4" do |f| %>
     <div class="card shadow-sm border-0 bg-light p-3">
       
       <div class="row g-2 mb-3">
@@ -24,8 +24,8 @@
         <div class="col-md-2 d-grid">
           <div class="btn-group">
             <%= f.submit "検索", class: "btn btn-primary" %>
-            <% if params[:query].present? || params[:tag_id].present? %>
-              <%= link_to "クリア", words_path, class: "btn btn-outline-secondary" %>
+            <% if params[:query].present? || params[:tag_ids].present? %>
+              <%= link_to "クリア", words_path, data: { turbo: false }, class: "btn btn-outline-secondary" %>
             <% end %>
           </div>
         </div>
@@ -35,12 +35,40 @@
         <div class="col-auto">
           <i class="bi bi-funnel text-muted"></i> <span class="text-muted fw-bold" style="font-size: 0.9rem;">タグフィルター:</span>
         </div>
-        <div class="col-md-4">
-          <%= f.collection_select :tag_id, Tag.all, :id, :name, 
-                                  { include_blank: "すべてのタグを表示", selected: params[:tag_id] }, 
-                                  { class: "form-select form-select-sm", onchange: "this.form.submit()" } %>
+        <div class="col-md-2">
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+              <% if params[:tag_ids].present? && params[:tag_ids].reject(&:blank?).any? %>
+                <span class="text-primary fw-bold"><%= params[:tag_ids].reject(&:blank?).length %>個のタグを選択中</span>
+              <% else %>
+                すべてのタグを表示
+              <% end %>
+            </button>
+            
+            <div class="dropdown-menu p-3 shadow" style="width: 100%; max-width: 300px;">
+              
+              <div class="mb-2">
+                <input type="text" class="form-control form-control-sm" id="tagDropdownSearch" placeholder="タグを検索...">
+              </div>
+              
+              <div class="tag-checkbox-list border rounded p-2 mb-2" style="max-height: 200px; overflow-y: auto;">
+                <% Tag.all.each do |tag| %>
+                  <div class="form-check tag-item">
+                    <input class="form-check-input" type="checkbox" name="tag_ids[]" value="<%= tag.id %>" id="tag_<%= tag.id %>"
+                           <%= 'checked' if params[:tag_ids]&.include?(tag.id.to_s) %>>
+                    <label class="form-check-label w-100" for="tag_<%= tag.id %>" style="cursor: pointer;">
+                      <%= tag.name %>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
+              
+              <button type="submit" class="btn btn-primary btn-sm w-100">適用</button>
+            </div>
+          </div>
         </div>
-      </div>      
+      </div>
+
     </div>
   <% end %>
 
