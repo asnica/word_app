@@ -14,20 +14,26 @@ class Word < ApplicationRecord
                     size: { less_than: 5.megabytes }
 
   def self.search(params)
-    words = all.includes(:tags).left_outer_joins(:tags).distinct
+    words = all.includes(:tags)
     if params[:query].present?
       q = "%#{params[:query]}%"
-      words = words.where(
-        "words.name LIKE ? OR words.meaning LIKE ? OR tags.name LIKE ?", 
-        q, q, q
-        )
+      case params[:search_scope]
+      when 'name'
+        words = words.where('words.name LIKE ?', q)
+      when 'meaning'
+        words = words.where('words.meaning LIKE ?', q)
+      when 'synonym'
+        words = words.where('words.synonym LIKE ?', q)
+      else
+        words = words.where('words.name LIKE :q OR words.meaning LIKE :q OR words.synonym LIKE :q', q: q)
+      end
     end
 
-    if params[:tag_ids].present?
-      words = words.where(tags: { id: params[:tag_ids] })
+    if params[:tag_id].present?
+      words = words.joins(:word_tags).where(word_tags: { tag_id: params[:tag_id] })
     end
 
-    words
+    words.distinct
   end
 
   def self.to_csv

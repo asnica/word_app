@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">単語一覧</h2>
     <div class="d-flex gap-2">
-      <%= link_to words_path(params: params.permit(:query, :tag_id), format: :csv), class: "btn btn-outline-success d-flex align-items-center" do %>
+      <%= link_to words_path(params: params.permit(:query, :tag_id, :search_scope), format: :csv), class: "btn btn-outline-success d-flex align-items-center" do %>
         <i class="bi bi-file-earmark-arrow-down me-1"></i> CSV出力
       <% end %>
       <%= link_to "新規単語登録", new_word_path, class: "btn btn-success" %>
@@ -10,23 +10,37 @@
   </div>
 
   <%= form_with url: words_path, method: :get, local: true, class: "mb-4" do |f| %>
-    <div class="row g-2 shadow-sm p-3 bg-white rounded border">
-      <div class="col-md-6">
-        <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "単語名もしくは意味で検索" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.collection_select :tag_id, Tag.all, :id, :name, 
-                                { include_blank: "すべてのタグ", selected: params[:tag_id] }, 
-                                { class: "form-select" } %>
-      </div>
-      <div class="col-md-2 d-grid">
-        <div class="btn-group">
-          <%= f.submit "検索", class: "btn btn-primary" %>
-          <% if params[:query].present? || params[:tag_id].present? %>
-            <%= link_to "クリア", words_path, class: "btn btn-outline-secondary" %>
-          <% end %>
+    <div class="card shadow-sm border-0 bg-light p-3">
+      
+      <div class="row g-2 mb-3">
+        <div class="col-md-3">
+          <%= f.select :search_scope, 
+                       options_for_select([['全体', 'all'], ['単語名', 'name'], ['意味', 'meaning'], ['類義語', 'synonym']], params[:search_scope]), 
+                       {}, { class: "form-select" } %>
+        </div>
+        <div class="col-md-7">
+          <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "検索語を入力してください" %>
+        </div>
+        <div class="col-md-2 d-grid">
+          <div class="btn-group">
+            <%= f.submit "検索", class: "btn btn-primary" %>
+            <% if params[:query].present? || params[:tag_id].present? %>
+              <%= link_to "クリア", words_path, class: "btn btn-outline-secondary" %>
+            <% end %>
+          </div>
         </div>
       </div>
+
+      <div class="row g-2 align-items-center border-top pt-2 mt-1">
+        <div class="col-auto">
+          <i class="bi bi-funnel text-muted"></i> <span class="text-muted fw-bold" style="font-size: 0.9rem;">タグフィルター:</span>
+        </div>
+        <div class="col-md-4">
+          <%= f.collection_select :tag_id, Tag.all, :id, :name, 
+                                  { include_blank: "すべてのタグを表示", selected: params[:tag_id] }, 
+                                  { class: "form-select form-select-sm", onchange: "this.form.submit()" } %>
+        </div>
+      </div>      
     </div>
   <% end %>
 

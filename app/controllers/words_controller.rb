@@ -4,6 +4,7 @@ class WordsController < ApplicationController
 
   def index
     @words = Word.search(params).order(created_at: :desc)
+    
     respond_to do |format|
       format.html
       format.csv do
