@@ -51,7 +51,7 @@ class WordsController < ApplicationController
   private
 
   def word_params
-    params.require(:word).permit(:name, :meaning, :note, :synonym, tag_ids: [], synonym: [])
+    params.require(:word).permit(:name, :meaning, :note, :synonym, :image, :remove_image, tag_ids: [], synonym: [])
   end
 
   def correct_user

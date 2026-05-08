@@ -3,13 +3,18 @@ class TagsController < ApplicationController
   before_action :correct_user, only: [:edit, :update, :destroy]
 
   def index
-    if params[:query].present?
-      # タグ名の曖昧検索
-      @tags = Tag.where("name LIKE ?", "%#{params[:query]}%")
+    @tags = Tag.all.order(created_at: :desc)
+    @user = current_user
+    @user.tags.build if @user.tags.empty?
+  end
+
+  def update_tags
+    if current_user.update(user_params)
+      redirect_to tags_path, notice: "タグを登録しました。"
     else
       @tags = Tag.all
+      render :index, status: :unprocessable_entity
     end
-    @tag = Tag.new
   end
 
   def create
@@ -41,6 +46,10 @@ class TagsController < ApplicationController
 
 
   private
+
+  def user_params
+    params.fetch(:user, {}).permit(tags_attributes: [:id, :name, :_destroy])
+  end
 
   def tag_params
     params.require(:tag).permit(:name)

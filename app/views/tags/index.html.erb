@@ -4,28 +4,37 @@
     <%= link_to "メニューへ戻る", root_path, class: "btn btn-outline-secondary" %>
   </div>
 
-  <% if @tag.errors.any? %>
-  <div class="alert alert-danger">
-    <ul class="mb-0">
-      <% @tag.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-  
-  <% # 新規登録セクション %>
-  <div class="card mb-4 shadow-sm">
-    <div class="card-header bg-light">
-      <span class="fw-bold">新規タグ登録</span>
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
     </div>
+  <% end %>
+
+  <div class="card mb-4 shadow-sm border-primary">
+    <div class="card-header bg-primary text-white fw-bold">新規タグ一括登録</div>
     <div class="card-body">
-      <%= form_with model: Tag.new, local: true, class: "row g-3" do |f| %>
-        <div class="col-auto">
-          <%= f.text_field :name, class: "form-control", placeholder: "タグ名を入力" %>
+      <%= form_with model: @user, url: update_tags_tags_path, method: :patch, local: true do |form| %>
+        <%= cocooned_container id: "tags-form" do %>
+          <%= form.fields_for :tags do |tag_form| %>
+            <% if tag_form.object.new_record? %>
+              <%= render "tag_fields", f: tag_form %>
+            <% end %>
+          <% end %>
+        <div class="links mb-4">
+          <%= cocooned_add_item_link "+ タグを追加", 
+                                      form, 
+                                      :tags,
+                                      class: "btn btn-sm btn-secondary",
+                                      partial: "tag_fields" %>
         </div>
-        <div class="col-auto">
-          <%= f.submit "登録", class: "btn btn-success" %>
+        <% end %>
+        
+        <div class="text-end mt-3">
+          <%= form.submit "まとめて保存", class: "btn btn-success" %>
         </div>
       <% end %>
     </div>
@@ -53,10 +62,16 @@
           <tr>
             <td class="fw-bold"><%= tag.name %></td>
             <td class="text-end">
-              <% # 作成者のみ編集・削除ボタンを表示 %>
-              <% if tag.user == current_user %>
+              <% is_mine = (tag.user == current_user) %>
+
+              <% if is_mine %>
                 <%= link_to "編集", edit_tag_path(tag), class: "btn btn-sm btn-outline-primary me-1" %>
                 <%= link_to "削除", tag_path(tag), data: { "turbo-method": :delete, "turbo-confirm": "本当に削除しますか？" }, class: "btn btn-sm btn-outline-danger" %>
+              <% else %>
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="作成者のみ編集・削除可能です。">
+                  <button class="btn btn-sm btn-outline-secondary me-1" disabled style="pointer-events: none;">編集</button>
+                  <button class="btn btn-sm btn-outline-secondary" disabled style="pointer-events: none;">削除</button>
+                </span>
               <% end %>
             </td>
           </tr>

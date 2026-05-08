@@ -1,0 +1,12 @@
+<%= cocooned_item class: "row g-2 mb-3 align-items-center" do %>
+  
+  <div class="col-auto">
+    <%= f.text_field :name, class: "form-control form-control-sm", placeholder: "タグ名を入力" %>
+  </div>
+
+  <div class="col-auto">
+    <%= cocooned_remove_item_link "削除", 
+                              f,
+                              class: "btn btn-sm btn-outline-danger" %>
+  </div>
+<% end %>

@@ -7,5 +7,8 @@ import { application } from "controllers/application"
 import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
 
+import ImagePreviewController from "controllers/image_preview_controller"
+application.register("image-preview", ImagePreviewController)
+
 import SelectController from "controllers/select_controller"
 application.register("select", SelectController)
