@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   resources :quizzes, only: [:index, :show, :create] do
     member do
       post :restart
+      post :answer
+      post :previous
+      post :restart
     end
   end
 

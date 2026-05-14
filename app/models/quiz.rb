@@ -6,7 +6,7 @@ class Quiz < ApplicationRecord
   enum :status, { ongoing: 0, completed: 1 }
 
   def self.generate_quiz(current_user)
-    random_words = current_user.words.sample(10)
+    random_words = Word.order("RANDOM()").limit(10)
 
     quiz = current_user.quizzes.create(status: :ongoing, current_question_index: 0)
 
@@ -22,9 +22,9 @@ class Quiz < ApplicationRecord
   end
 
   def restart_new_attempt
-    new_quiz = Quiz.create(user: self.user, status: :ongoing, current_question_index: 0)
+    new_quiz = Quiz.create!(user: self.user, status: :ongoing, current_question_index: 0, total_score: 0)
 
-    self.quiz_items.order(:position).each do |item|
+    self.quiz_items.each do |item|
       new_quiz.quiz_items.create(word: item.word, position: item.position)
     end
 
