@@ -23,7 +23,6 @@ Rails.application.routes.draw do
       post :restart
       post :answer
       post :previous
-      post :restart
     end
   end
 
