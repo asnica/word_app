@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_084618) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_18_083353) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,11 +43,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_084618) do
   end
 
   create_table "quiz_items", force: :cascade do |t|
+    t.string "choice_list"
     t.datetime "created_at", null: false
     t.boolean "is_correct"
     t.integer "position"
     t.bigint "quiz_id", null: false
     t.datetime "updated_at", null: false
+    t.string "user_choice"
     t.bigint "word_id", null: false
     t.index ["quiz_id"], name: "index_quiz_items_on_quiz_id"
     t.index ["word_id"], name: "index_quiz_items_on_word_id"

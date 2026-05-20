@@ -10,10 +10,13 @@ class QuizzesController < ApplicationController
 
   def show
     @quiz = current_user.quizzes.find(params[:id])
+    if params[:position].present?
+      @quiz.update(current_question_index: params[:position].to_i)
+    end
     @quiz_item = @quiz.quiz_items.find_by(position: @quiz.current_question_index)
+
     if @quiz_item.nil?
-      @quiz.completed! unless @quiz.completed?
-      redirect_to quizzes_path, status: :see_other, notice: "単語数が不足しているため、問題集は終了しました。" and return
+      redirect_to review_quiz_path(@quiz) and return
     end
   end
 
@@ -21,20 +24,15 @@ class QuizzesController < ApplicationController
     @quiz = current_user.quizzes.find(params[:id])
     @quiz_item = @quiz.quiz_items.find_by(position: @quiz.current_question_index)
 
-    if params[:answer] == @quiz_item.word.meaning
-      @quiz_item.update(is_correct: true)
-      @quiz.increment!(:total_score)
-    else
-      @quiz_item.update(is_correct: false)
-    end
+    is_correct = (params[:answer] == @quiz_item.word.meaning)
+    @quiz_item.update(user_choice: params[:answer], is_correct: is_correct)
 
     @quiz.increment!(:current_question_index)
 
     if @quiz.current_question_index < @quiz.quiz_items.count
       redirect_to quiz_path(@quiz), status: :see_other
     else
-      @quiz.completed!
-      redirect_to quizzes_path, status: :see_other, notice: "すべての問題を解き終えました！"
+      redirect_to review_quiz_path(@quiz), status: :see_other
     end
   end
 
@@ -50,5 +48,18 @@ class QuizzesController < ApplicationController
     @old_quiz = current_user.quizzes.find(params[:id])
     @new_quiz = @old_quiz.restart_new_attempt
     redirect_to quiz_path(@new_quiz), status: :see_other, notice: "同じ問題で再挑戦します！"
+  end
+
+  def review
+    @quiz = current_user.quizzes.find(params[:id])
+    @quiz_items = @quiz.quiz_items.order(:position)
+  end
+
+  def result
+    @quiz = current_user.quizzes.find(params[:id])
+    @quiz.completed!
+    @quiz_items = @quiz.quiz_items.order(:position)
+    @score = @quiz_items.where(is_correct: true).count
+    @quiz.update(total_score: @score)
   end
 end

@@ -23,6 +23,8 @@ Rails.application.routes.draw do
       post :restart
       post :answer
       post :previous
+      get :review
+      get :result
     end
   end
 

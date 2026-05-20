@@ -1,0 +1,50 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      
+      <div class="card border-0 shadow-sm overflow-hidden">
+        <div class="card-header bg-white border-bottom py-4 text-center">
+          <h2 class="fw-bold text-primary mb-0">回答一覧</h2>
+          <p class="text-muted mt-2 mb-0">まだ採点は完了していません。行をクリックすると問題に戻れます。</p>
+        </div>
+        
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light text-muted">
+                <tr>
+                  <th class="px-4 py-3" style="width: 10%">No.</th>
+                  <th class="py-3" style="width: 40%">問題（単語）</th>
+                  <th class="py-3" style="width: 50%">あなたの回答</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @quiz_items.each do |item| %>
+                  <tr style="cursor: pointer;" onclick="window.location='<%= quiz_path(@quiz, position: item.position) %>'">
+                    <td class="px-4 fw-bold text-secondary"><%= item.position + 1 %></td>
+                    <td class="fw-bold fs-5"><%= item.word.name %></td>
+                    <td>
+                      <% if item.user_choice.present? %>
+                        <span class="text-dark"><%= item.user_choice %></span>
+                      <% else %>
+                        <span class="badge bg-secondary">未回答</span>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="card-footer bg-white border-top p-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <%= link_to "中断して戻る", quizzes_path, class: "btn btn-outline-secondary px-4 shadow-sm" %>
+            <%= button_to "採点する", result_quiz_path(@quiz), method: :get, class: "btn btn-success btn-lg px-5 shadow-sm fw-bold" %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

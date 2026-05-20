@@ -36,7 +36,7 @@
               <div class="d-grid gap-3 mb-5">
                 <% @quiz_item.choices.each_with_index do |choice, i| %>
                   <div class="form-check p-0">
-                    <input type="radio" name="answer" value="<%= choice %>" id="choice_<%= i %>" class="btn-check" required>
+                    <input type="radio" name="answer" value="<%= choice %>" id="choice_<%= i %>" class="btn-check" <%= 'checked' if @quiz_item.user_choice == choice %>>
                     <label class="btn btn-outline-light text-dark border shadow-sm w-100 py-3 px-4 text-start d-flex align-items-center quiz-choice-label" for="choice_<%= i %>">
                       <span class="choice-number me-3"><%= i + 1 %></span>
                       <span class="flex-grow-1"><%= choice %></span>

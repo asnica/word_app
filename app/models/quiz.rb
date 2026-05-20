@@ -11,7 +11,10 @@ class Quiz < ApplicationRecord
     quiz = current_user.quizzes.create(status: :ongoing, current_question_index: 0)
 
     random_words.each_with_index do |word, index|
-      quiz.quiz_items.create(word: word, position: index)
+      distractors = Word.where.not(id: word.id).order("RANDOM()").limit(2).pluck(:meaning)
+      shuffled = (distractors + [word.meaning]).shuffle.join(",")
+
+      quiz.quiz_items.create(word: word, position: index, choice_list: shuffled)
     end
 
     quiz
@@ -25,7 +28,7 @@ class Quiz < ApplicationRecord
     new_quiz = Quiz.create!(user: self.user, status: :ongoing, current_question_index: 0, total_score: 0)
 
     self.quiz_items.each do |item|
-      new_quiz.quiz_items.create(word: item.word, position: item.position)
+      new_quiz.quiz_items.create(word: item.word, position: item.position, choice_list: item.choice_list)
     end
 
     new_quiz
