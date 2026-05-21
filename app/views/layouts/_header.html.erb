@@ -7,7 +7,7 @@
         <li class="nav-item"><%= link_to "単語タグマスタ", tags_path, class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "単語マスタ", words_path, data: { turbo: false }, class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "問題集", quizzes_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "ランキング", "#", class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "ランキング", rankings_path, class: "nav-link" %></li>
 
         <% if current_user %>
           <% # 1. ログイン状態の表示 %>

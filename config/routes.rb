@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "rankings/index"
   get "quizzes/index"
   get "quizzes/show"
   root "static_pages#home"
@@ -27,6 +28,8 @@ Rails.application.routes.draw do
       get :result
     end
   end
+
+  resources :rankings, only: [:index]
 
   get 'dashboard', to: 'quizzes#index'
 end
