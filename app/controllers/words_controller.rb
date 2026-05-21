@@ -3,7 +3,7 @@ class WordsController < ApplicationController
   before_action :correct_user, only: [:edit, :update, :destroy]
 
   def index
-    @words = Word.search(params).order(created_at: :desc)
+    @words = Word.search(params).order(created_at: :desc).page(params[:page]).per(9)
     
     respond_to do |format|
       format.html

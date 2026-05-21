@@ -71,6 +71,9 @@
           </div>
         </div>
       <% end %>
+      <div class="d-flex justify-content-center mt-5">
+        <%= paginate @quizzes, window: 1, outer_window: 0 %>
+      </div>
     <% else %>
       <div class="col-12 text-center py-5">
         <div class="mb-3">

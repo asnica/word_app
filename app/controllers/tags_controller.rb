@@ -3,7 +3,7 @@ class TagsController < ApplicationController
   before_action :correct_user, only: [:edit, :update, :destroy]
 
   def index
-    @tags = Tag.all.order(created_at: :desc)
+    @tags = Tag.order(created_at: :desc).page(params[:page]).per(10)
     @user = current_user
     @user.tags.build if @user.tags.empty?
   end

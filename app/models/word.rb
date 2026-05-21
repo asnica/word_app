@@ -45,7 +45,7 @@ class Word < ApplicationRecord
     bom = "\uFEFF"
     CSV.generate(bom) do |csv|
       csv << ['ID', '単語', '意味', '類義語', 'タグ', 'メモ']
-      all.includes(:tags).find_each do |word|
+      all.includes(:tags).each do |word|
         clean_synonym = word.synonym.to_s.split(',').map(&:strip).reject(&:blank?).join(', ')
         csv << [
           word.id,

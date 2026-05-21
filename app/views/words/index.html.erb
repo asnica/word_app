@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">単語一覧</h2>
     <div class="d-flex gap-2">
-      <%= link_to words_path(params: params.permit(:query, :search_scope, tag_ids: []), format: :csv), class: "btn btn-outline-success d-flex align-items-center" do %>
+      <%= link_to words_path(params: params.permit(:query, :search_scope, tag_ids: []), format: :csv, page: params[:page]), class: "btn btn-outline-success d-flex align-items-center" do %>
         <i class="bi bi-file-earmark-arrow-down me-1"></i> CSV出力
       <% end %>
       <%= link_to "新規単語登録", new_word_path, class: "btn btn-success" %>
@@ -133,6 +133,9 @@
           </div>
         </div>
       <% end %>
+      <div class="d-flex justify-content-center mt-5">
+        <%= paginate @words, window: 1, outer_window: 0 %>
+      </div>
     <% else %>
       <div class="col-12 text-center py-5">
         <p class="text-muted">登録された単語がありません。</p>

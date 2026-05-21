@@ -1,6 +1,6 @@
 class QuizzesController < ApplicationController
   def index
-    @quizzes = current_user.quizzes.order(created_at: :desc)
+    @quizzes = current_user.quizzes.order(created_at: :desc).page(params[:page]).per(9)
   end
 
   def create
