@@ -1,4 +1,6 @@
 class QuizzesController < ApplicationController
+  before_action :set_quiz, only: [:show, :answer, :previous, :restart, :review, :result]
+
   def index
     @quizzes = current_user.quizzes.order(created_at: :desc).page(params[:page]).per(9)
   end
@@ -9,19 +11,17 @@ class QuizzesController < ApplicationController
   end
 
   def show
-    @quiz = current_user.quizzes.find(params[:id])
     if params[:position].present?
       @quiz.update(current_question_index: params[:position].to_i)
     end
     @quiz_item = @quiz.quiz_items.find_by(position: @quiz.current_question_index)
 
     if @quiz_item.nil?
-      redirect_to review_quiz_path(@quiz) and return
+      redirect_to review_quiz_path(@quiz, return_to: params[:return_to]) and return
     end
   end
 
   def answer
-    @quiz = current_user.quizzes.find(params[:id])
     @quiz_item = @quiz.quiz_items.find_by(position: @quiz.current_question_index)
 
     is_correct = (params[:answer] == @quiz_item.word.meaning)
@@ -30,18 +30,17 @@ class QuizzesController < ApplicationController
     @quiz.increment!(:current_question_index)
 
     if @quiz.current_question_index < @quiz.quiz_items.count
-      redirect_to quiz_path(@quiz), status: :see_other
+      redirect_to quiz_path(@quiz, return_to: params[:return_to]), status: :see_other
     else
-      redirect_to review_quiz_path(@quiz), status: :see_other
+      redirect_to review_quiz_path(@quiz, return_to: params[:return_to]), status: :see_other
     end
   end
 
   def previous
-    @quiz = current_user.quizzes.find(params[:id])
     if @quiz.current_question_index > 0
       @quiz.decrement!(:current_question_index)
     end
-    redirect_to quiz_path(@quiz), status: :see_other
+    redirect_to quiz_path(@quiz, return_to: params[:return_to]), status: :see_other
   end
 
   def restart
@@ -51,15 +50,21 @@ class QuizzesController < ApplicationController
   end
 
   def review
-    @quiz = current_user.quizzes.find(params[:id])
     @quiz_items = @quiz.quiz_items.order(:position)
   end
 
   def result
-    @quiz = current_user.quizzes.find(params[:id])
     @quiz.completed!
     @quiz_items = @quiz.quiz_items.order(:position)
     @score = @quiz_items.where(is_correct: true).count
     @quiz.update(total_score: @score)
+  end
+
+  private
+
+  def set_quiz
+    @quiz = current_user.quizzes.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to quizzes_path, alert: "権限がないか、無効なアクセスです。"
   end
 end

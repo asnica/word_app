@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   resources :tags, except: [:show] do
     collection do
-      patch :update_tags
+      patch :create_tags
     end
   end
 

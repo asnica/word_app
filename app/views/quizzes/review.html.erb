@@ -20,7 +20,7 @@
               </thead>
               <tbody>
                 <% @quiz_items.each do |item| %>
-                  <tr style="cursor: pointer;" onclick="window.location='<%= quiz_path(@quiz, position: item.position) %>'">
+                  <tr style="cursor: pointer;" onclick="window.location='<%= quiz_path(@quiz, position: item.position, return_to: params[:return_to]) %>'">
                     <td class="px-4 fw-bold text-secondary"><%= item.position + 1 %></td>
                     <td class="fw-bold fs-5"><%= item.word.name %></td>
                     <td>
@@ -39,8 +39,12 @@
         
         <div class="card-footer bg-white border-top p-4">
           <div class="d-flex justify-content-between align-items-center">
-            <%= link_to "中断して戻る", quizzes_path, class: "btn btn-outline-secondary px-4 shadow-sm" %>
-            <%= button_to "採点する", result_quiz_path(@quiz), method: :get, class: "btn btn-success btn-lg px-5 shadow-sm fw-bold" %>
+            <% if params[:return_to].present? %>
+              <%= link_to "中断して戻る", params[:return_to], class: "btn btn-outline-secondary px-4 shadow-sm" %>
+            <% else %>
+              <%= link_to "中断して戻る", quizzes_path, class: "btn btn-outline-secondary px-4 shadow-sm" %>
+            <% end %>
+            <%= link_to "採点する", result_quiz_path(@quiz, return_to: params[:return_to]), class: "btn btn-success btn-lg px-5 shadow-sm fw-bold" %>
           </div>
         </div>
       </div>

@@ -8,21 +8,11 @@ class TagsController < ApplicationController
     @user.tags.build if @user.tags.empty?
   end
 
-  def update_tags
+  def create_tags
     if current_user.update(user_params)
       redirect_to tags_path, notice: "タグを登録しました。"
     else
       @tags = Tag.all
-      render :index, status: :unprocessable_entity
-    end
-  end
-
-  def create
-    @tag = current_user.tags.build(tag_params)
-    if @tag.save
-      redirect_to tags_path, notice: "タグを登録しました。"
-    else
-      @tags = current_user.tags.all
       render :index, status: :unprocessable_entity
     end
   end
@@ -33,7 +23,7 @@ class TagsController < ApplicationController
 
   def update
     if @tag.update(tag_params)
-      redirect_to tags_path, notice: "タグを更新しました。"
+      redirect_to params[:return_to] || tags_path, notice: "タグを更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,7 +31,7 @@ class TagsController < ApplicationController
 
   def destroy
     @tag.destroy
-    redirect_to tags_path, notice: "タグを削除しました。", status: :see_other
+    redirect_to params[:return_to] || tags_path, notice: "タグを削除しました。", status: :see_other
   end
 
 
@@ -56,8 +46,9 @@ class TagsController < ApplicationController
   end
 
   def correct_user
-    @tag = current_user.tags.find_by(id: params[:id])
-    redirect_to tags_path, alert: "権限がありません。" if @tag.nil?
+    @tag = current_user.tags.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to tags_path, alert: "権限がないか、無効なアクセスです。"
   end
 
 end

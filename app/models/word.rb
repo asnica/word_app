@@ -3,6 +3,7 @@ class Word < ApplicationRecord
   belongs_to :user
   has_many :word_tags, dependent: :destroy
   has_many :tags, through: :word_tags
+  include Hashid::Rails
 
   attr_accessor :remove_image
   before_save :purge_image, if: -> { remove_image == '1' }
@@ -44,16 +45,20 @@ class Word < ApplicationRecord
     require 'csv'
     bom = "\uFEFF"
     CSV.generate(bom) do |csv|
-      csv << ['ID', '単語', '意味', '類義語', 'タグ', 'メモ']
+      csv << ['単語', '意味', '類義語', 'タグ', 'メモ']
       all.includes(:tags).each do |word|
+        safe_name = word.name.to_s.start_with?("=") ? "'#{word.name}" : word.name
+        safe_meaning = word.meaning.to_s.start_with?("=") ? "'#{word.meaning}" : word.meaning
         clean_synonym = word.synonym.to_s.split(',').map(&:strip).reject(&:blank?).join(', ')
+        safe_synonym = clean_synonym.start_with?("=") ? "'#{clean_synonym}" : clean_synonym
+        safe_tags = word.tags.pluck(:name).join(', ').start_with?("=") ? "'#{word.tags.pluck(:name).join(', ')}" : word.tags.pluck(:name).join(', ')
+        safe_note = word.note.to_s.start_with?("=") ? "'#{word.note}" : word.note
         csv << [
-          word.id,
-          word.name,
-          word.meaning,
-          clean_synonym,
-          word.tags.pluck(:name).join(', '),
-          word.note
+          safe_name,
+          safe_meaning,
+          safe_synonym,
+          safe_tags,
+          safe_note
         ]
       end
     end

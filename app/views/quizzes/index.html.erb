@@ -12,11 +12,12 @@
   <div class="row g-4">
     <% if @quizzes.any? %>
       <% @quizzes.each_with_index do |quiz, index| %>
+        <% current_number = @quizzes.total_count - ((@quizzes.current_page - 1) * @quizzes.limit_value) - index %>
         <div class="col-md-6 col-lg-4">
           <div class="card h-100 shadow-sm border-0 bg-light">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-3">
-                <span class="text-muted small">#<%= @quizzes.length - index %> 回目の挑戦</span>
+                <span class="text-muted small">#<%= current_number %> 回目の挑戦</span>
                 <% if quiz.ongoing? %>
                   <span class="badge bg-warning text-dark">学習中</span>
                 <% else %>
@@ -49,7 +50,7 @@
             <div class="card-footer bg-white border-0 pb-3">
               <div class="d-grid gap-2">
                 <% if quiz.ongoing? %>
-                  <%= link_to quiz_path(quiz), class: "btn btn-outline-primary w-100" do %>
+                  <%= link_to quiz_path(quiz, return_to: request.fullpath), class: "btn btn-outline-primary w-100" do %>
                     <i class="bi bi-play-fill"></i> 続きから
                   <% end %>
                 <% else %>
@@ -60,7 +61,7 @@
                       <% end %>
                     </div>
                     <div class="col-6">
-                      <%= link_to result_quiz_path(quiz), class: "btn btn-outline-info btn-sm w-100" do %>
+                      <%= link_to result_quiz_path(quiz, return_to: request.fullpath), class: "btn btn-outline-info btn-sm w-100" do %>
                         <i class="bi bi-eye"></i> 回答表示
                       <% end %>
                     </div>

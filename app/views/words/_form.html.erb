@@ -1,4 +1,6 @@
 <%= form_with model: word, local: true do |f| %>
+  <%= hidden_field_tag :return_to, params[:return_to] %>
+  
   <% # エラーメッセージ %>
   <% if word.errors.any? %>
     <div class="alert alert-danger">
