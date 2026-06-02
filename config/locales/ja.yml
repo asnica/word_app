@@ -1,0 +1,12 @@
+ja:
+  activerecord:
+    attributes:
+      user:
+        name: "お名前"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+      word:
+        name: "単語"
+        meaning: "意味"
+        

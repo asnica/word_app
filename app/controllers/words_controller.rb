@@ -1,7 +1,7 @@
 class WordsController < ApplicationController
   before_action :logged_in_user
-  before_action :correct_user, only: [:edit, :update, :destroy]
-  before_action :format_synonym_params, only: [:create, :update]
+  before_action :correct_user, only: [ :edit, :update, :destroy ]
+  before_action :format_synonym_params, only: [ :create, :update ]
 
   def index
     @words = Word.search(params).order(created_at: :desc).page(params[:page]).per(9)
@@ -47,6 +47,8 @@ class WordsController < ApplicationController
   def destroy
     @word.destroy
     redirect_to params[:return_to] || words_path, notice: "単語を削除しました。", status: :see_other
+  rescue ActiveRecord::InvalidForeignKey
+    redirect_to params[:return_to] || words_path, alert: "この単語は問題集で使用されているため、削除できません。"
   end
 
   private
@@ -66,5 +68,4 @@ class WordsController < ApplicationController
       params[:word][:synonym] = params[:word][:synonym].join(",")
     end
   end
-
 end
