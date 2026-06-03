@@ -1,9 +1,9 @@
 class TagsController < ApplicationController
   before_action :logged_in_user
-  before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :correct_user, only: [ :edit, :update, :destroy ]
 
   def index
-    @tags = Tag.order(created_at: :desc).page(params[:page]).per(10)
+    @tags = Tag.search(params[:query]).order(created_at: :desc).page(params[:page]).per(10)
     @user = current_user
     @user.tags.build if @user.tags.empty?
   end
@@ -12,7 +12,7 @@ class TagsController < ApplicationController
     if current_user.update(user_params)
       redirect_to tags_path, notice: "タグを登録しました。"
     else
-      @tags = Tag.all
+      @tags = Tag.order(created_at: :desc).page(params[:page]).per(10)
       render :index, status: :unprocessable_entity
     end
   end
@@ -38,7 +38,7 @@ class TagsController < ApplicationController
   private
 
   def user_params
-    params.fetch(:user, {}).permit(tags_attributes: [:id, :name, :_destroy])
+    params.fetch(:user, {}).permit(tags_attributes: [ :id, :name, :_destroy ])
   end
 
   def tag_params
@@ -50,5 +50,4 @@ class TagsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to tags_path, alert: "権限がないか、無効なアクセスです。"
   end
-
 end
