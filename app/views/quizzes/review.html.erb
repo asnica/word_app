@@ -44,7 +44,7 @@
             <% else %>
               <%= link_to "中断して戻る", quizzes_path, class: "btn btn-outline-secondary px-4 shadow-sm" %>
             <% end %>
-            <%= link_to "採点する", result_quiz_path(@quiz, return_to: params[:return_to]), class: "btn btn-success btn-lg px-5 shadow-sm fw-bold" %>
+            <%= link_to "採点する", result_quiz_path(@quiz, return_to: params[:return_to]), data: { turbo_prefetch: false }, class: "btn btn-success btn-lg px-5 shadow-sm fw-bold" %>
           </div>
         </div>
       </div>
