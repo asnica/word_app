@@ -1,4 +1,5 @@
 class QuizzesController < ApplicationController
+  before_action :logged_in_user
   before_action :set_quiz, only: [:show, :answer, :previous, :restart, :review, :result]
 
   def index
@@ -6,8 +7,12 @@ class QuizzesController < ApplicationController
   end
 
   def create
-    @quiz = Quiz.generate_quiz(current_user)
-    redirect_to quiz_path(@quiz)
+    if Word.count < 10
+      redirect_to quizzes_path, alert: "問題集を作成するには、最低10個の単語が必要です。単語を追加してください。" and return
+    else
+      @quiz = Quiz.generate_quiz(current_user)
+      redirect_to quiz_path(@quiz)
+    end
   end
 
   def show
