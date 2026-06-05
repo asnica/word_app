@@ -4,9 +4,11 @@ class WordsController < ApplicationController
   before_action :format_synonym_params, only: [ :create, :update ]
 
   def index
-    @words = Word.search(params).order(created_at: :desc).page(params[:page]).per(9)
+    @words = Word.search(params)
     respond_to do |format|
-      format.html
+      format.html do
+        @words = @words.page(params[:page]).per(9)
+      end
       format.csv do
         send_data @words.to_csv, filename: "word_master_#{Time.zone.now.strftime('%Y%m%d%H%M')}.csv"
       end

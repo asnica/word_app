@@ -46,12 +46,13 @@ class Word < ApplicationRecord
     bom = "\uFEFF"
     CSV.generate(bom) do |csv|
       csv << ['単語', '意味', '類義語', 'タグ', 'メモ']
-      all.includes(:tags).each do |word|
+      includes(:tags).each do |word|
         safe_name = word.name.to_s.start_with?("=") ? "'#{word.name}" : word.name
         safe_meaning = word.meaning.to_s.start_with?("=") ? "'#{word.meaning}" : word.meaning
         clean_synonym = word.synonym.to_s.split(',').map(&:strip).reject(&:blank?).join(', ')
         safe_synonym = clean_synonym.start_with?("=") ? "'#{clean_synonym}" : clean_synonym
-        safe_tags = word.tags.pluck(:name).join(', ').start_with?("=") ? "'#{word.tags.pluck(:name).join(', ')}" : word.tags.pluck(:name).join(', ')
+        tag_names = word.tags.pluck(:name).join(', ')
+        safe_tags = tag_names.start_with?("=") ? "'#{tag_names}" : tag_names
         safe_note = word.note.to_s.start_with?("=") ? "'#{word.note}" : word.note
         csv << [
           safe_name,
