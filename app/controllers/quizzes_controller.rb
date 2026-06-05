@@ -1,6 +1,6 @@
 class QuizzesController < ApplicationController
   before_action :logged_in_user
-  before_action :set_quiz, only: [:show, :answer, :previous, :restart, :review, :result]
+  before_action :set_quiz, only: [:show, :answer, :previous, :restart, :review, :result, :complete]
 
   def index
     @quizzes = current_user.quizzes.order(created_at: :desc).page(params[:page]).per(9)
@@ -54,15 +54,23 @@ class QuizzesController < ApplicationController
     redirect_to quiz_path(@new_quiz), status: :see_other, notice: "同じ問題で再挑戦します！"
   end
 
+  def complete
+    @quiz_items = @quiz.quiz_items
+    @score = @quiz_items.where(is_correct: true).count
+
+    @quiz.completed!
+    @quiz.update(total_score: @score)
+
+    redirect_to result_quiz_path(@quiz), status: :see_other
+  end
+
   def review
     @quiz_items = @quiz.quiz_items.order(:position)
   end
 
   def result
-    @quiz.completed!
     @quiz_items = @quiz.quiz_items.order(:position)
     @score = @quiz_items.where(is_correct: true).count
-    @quiz.update(total_score: @score)
   end
 
   private
