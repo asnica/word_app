@@ -89,7 +89,7 @@ production:
     <<: *default
     database: word_app_production
     username: word_app
-    password: <%= ENV["WORD_APP_DATABASE_PASSWORD"] %>
+    password: "0dad1d2f8bbd085b975261cf61b67c65"
   cache:
     <<: *primary_production
     database: word_app_production_cache
