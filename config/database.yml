@@ -22,6 +22,10 @@ default: &default
 
 development:
   <<: *default
+  host: 127.0.0.1
+  port: 5432
+  username: postgres
+  password: password
   database: word_app_development
 
   # The specified database role being used to connect to PostgreSQL.

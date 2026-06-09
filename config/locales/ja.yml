@@ -1,0 +1,19 @@
+ja:
+  activerecord:
+    attributes:
+      user:
+        name: "お名前"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+      word:
+        name: "単語"
+        meaning: "意味"
+  views:
+    pagination:
+      first: "&laquo; 最初"
+      last: "最後 &raquo;"
+      previous: "&lsaquo; 前"
+      next: "次 &rsaquo;"
+      truncate: "&hellip;"
+        

@@ -1,0 +1,132 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+      
+      <%= turbo_frame_tag "quiz_content" do %>
+        <div class="card border-0 shadow-sm overflow-hidden">
+          
+          <div class="card-header bg-white border-0 pt-4 px-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-bold text-primary">第 <%= @quiz.current_question_index + 1 %> 問 <span class="text-muted small">/ 10</span></span>
+              <span class="badge bg-light text-primary border"><%= (@quiz.current_question_index + 1) * 10 %>% 完了</span>
+            </div>
+            <div class="progress" style="height: 6px; background-color: #e9ecef;">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                   style="width: <%= (@quiz.current_question_index + 1) * 10 %>%"></div>
+            </div>
+          </div>
+
+          <div class="card-body p-4 p-md-5">
+            <%= form_with url: answer_quiz_path(@quiz), method: :post, data: { turbo_frame: "_top" } do |f| %>
+              <%= hidden_field_tag :return_to, params[:return_to] %>
+              
+              <div class="text-center mb-5">
+                <h1 class="display-3 fw-bold text-dark mb-3"><%= @quiz_item.word.name %></h1>
+                
+                <% if @quiz_item.word.synonym.present? %>
+                  <% clean_synonyms = @quiz_item.word.synonym.to_s.split(',').map(&:strip).reject(&:blank?).join(', ') %>
+                  <div class="mb-3">
+                    <span class="text-muted small border-bottom pb-1">
+                      <i class="bi bi-intersect"></i> 類義語: <%= clean_synonyms %>
+                    </span>
+                  </div>
+                <% end %>
+                <p class="text-secondary fs-5">意味を選択してください</p>
+              </div>
+
+              <div class="d-grid gap-3 mb-5">
+                <% @quiz_item.choices.each_with_index do |choice, i| %>
+                  <div class="form-check p-0">
+                    <input type="radio" name="answer" value="<%= choice %>" id="choice_<%= i %>" class="btn-check" <%= 'checked' if @quiz_item.user_choice == choice %>>
+                    <label class="btn btn-outline-light text-dark border shadow-sm w-100 py-3 px-4 text-start d-flex align-items-center quiz-choice-label" for="choice_<%= i %>">
+                      <span class="choice-number me-3"><%= i + 1 %></span>
+                      <span class="flex-grow-1"><%= choice %></span>
+                      <i class="bi bi-check-circle-fill ms-auto check-icon"></i>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center pt-4 border-top">
+                <div style="min-width: 120px;">
+                  <% if @quiz.current_question_index > 0 %>
+                    <%= link_to previous_quiz_path(@quiz, return_to: params[:return_to]), data: { turbo_method: :post }, class: "btn btn-link text-decoration-none text-muted p-0" do %>
+                      <i class="bi bi-arrow-left"></i> 前の問題へ
+                    <% end %>
+                  <% end %>
+                </div>
+
+                <div>
+                  <% if @quiz.current_question_index < 9 %>
+                    <%= f.submit "次の問題へ", class: "btn btn-primary btn-lg px-5 shadow-sm fw-bold" %>
+                  <% else %>
+                    <%= f.submit "採点する", class: "btn btn-success btn-lg px-5 shadow-sm fw-bold" %>
+                  <% end %>
+                </div>
+              </div>
+
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="mt-4 text-center">
+        <% if params[:return_to].present? %>
+          <%= link_to "中断して戻る", params[:return_to], data: { turbo_frame: "_top" }, class: "text-muted small text-decoration-none" %>
+        <% else %>
+          <%= link_to "中断して戻る", quizzes_path, data: { turbo_frame: "_top" }, class: "text-muted small text-decoration-none" %>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .quiz-choice-label {
+    background-color: #fff;
+    border-color: #dee2e6 !important;
+    transition: all 0.2s ease;
+  }
+  
+  .quiz-choice-label:hover {
+    background-color: #f8f9fa !important;
+    border-color: #0d6efd !important;
+    color: #0d6efd !important;
+    transform: translateY(-2px);
+  }
+
+  .choice-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background-color: #f1f3f5;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #495057;
+  }
+
+  .check-icon {
+    display: none;
+    color: #0d6efd;
+  }
+
+  .btn-check:checked + .quiz-choice-label {
+    background-color: #e7f1ff !important;
+    border-color: #0d6efd !important;
+    color: #0d6efd !important;
+    font-weight: bold;
+  }
+
+  .btn-check:checked + .quiz-choice-label .choice-number {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  .btn-check:checked + .quiz-choice-label .check-icon {
+    display: block;
+  }
+</style>

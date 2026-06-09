@@ -1,28 +1,18 @@
 class TagsController < ApplicationController
   before_action :logged_in_user
-  before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :correct_user, only: [ :edit, :update, :destroy ]
 
   def index
-    @tags = Tag.all.order(created_at: :desc)
+    @tags = Tag.search(params[:query]).order(created_at: :desc).page(params[:page]).per(10)
     @user = current_user
     @user.tags.build if @user.tags.empty?
   end
 
-  def update_tags
+  def create_tags
     if current_user.update(user_params)
       redirect_to tags_path, notice: "タグを登録しました。"
     else
-      @tags = Tag.all
-      render :index, status: :unprocessable_entity
-    end
-  end
-
-  def create
-    @tag = current_user.tags.build(tag_params)
-    if @tag.save
-      redirect_to tags_path, notice: "タグを登録しました。"
-    else
-      @tags = current_user.tags.all
+      @tags = Tag.order(created_at: :desc).page(params[:page]).per(10)
       render :index, status: :unprocessable_entity
     end
   end
@@ -33,7 +23,7 @@ class TagsController < ApplicationController
 
   def update
     if @tag.update(tag_params)
-      redirect_to tags_path, notice: "タグを更新しました。"
+      redirect_to params[:return_to] || tags_path, notice: "タグを更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,14 +31,14 @@ class TagsController < ApplicationController
 
   def destroy
     @tag.destroy
-    redirect_to tags_path, notice: "タグを削除しました。", status: :see_other
+    redirect_to params[:return_to] || tags_path, notice: "タグを削除しました。", status: :see_other
   end
 
 
   private
 
   def user_params
-    params.fetch(:user, {}).permit(tags_attributes: [:id, :name, :_destroy])
+    params.fetch(:user, {}).permit(tags_attributes: [ :id, :name, :_destroy ])
   end
 
   def tag_params
@@ -56,8 +46,8 @@ class TagsController < ApplicationController
   end
 
   def correct_user
-    @tag = current_user.tags.find_by(id: params[:id])
-    redirect_to tags_path, alert: "権限がありません。" if @tag.nil?
+    @tag = current_user.tags.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to tags_path, alert: "権限がないか、無効なアクセスです。"
   end
-
 end

@@ -1,6 +1,6 @@
 class UserMailer < ApplicationMailer
   # 基本送信アドレスの設定
-  default from: 'notification@example.com'
+  default from: 'hyein.h@asnica.co.jp'
 
   # 新規登録の歓迎メールメソッドを定義
   def welcome_email(user)
