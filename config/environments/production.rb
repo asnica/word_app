@@ -66,7 +66,7 @@ Rails.application.configure do
       port: 587,
       domain: 'word.asnica.work',
       user_name: 'apikey',
-      password: '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',
+      password: Rails.application.credentials.dig(:sendgrid, :api_key),
       authentication: :plain,
       enable_starttls_auto: true
    }
