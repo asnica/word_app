@@ -1,6 +1,7 @@
 class QuizzesController < ApplicationController
   before_action :logged_in_user
   before_action :set_quiz, only: [:show, :answer, :previous, :restart, :review, :result, :complete]
+  before_action :ensure_quiz_not_completed, only: [:show, :answer, :previous]
 
   def index
     @quizzes = current_user.quizzes.order(created_at: :desc).page(params[:page]).per(9)
@@ -79,5 +80,13 @@ class QuizzesController < ApplicationController
     @quiz = current_user.quizzes.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to quizzes_path, alert: "権限がないか、無効なアクセスです。"
+  end
+
+  def ensure_quiz_not_completed
+    @quiz = Quiz.find(params[:id])
+
+    if @quiz.completed?
+      redirect_to result_quiz_path(@quiz), alert: "この問題集は既に完了しています。"
+    end
   end
 end
