@@ -1,5 +1,38 @@
 ja:
+  errors:
+    pages:
+      subdomain_error: "サブドメインが無効です。"
+    messages:
+      already_confirmed: "は既に承認されています。ログインしてください。"
+      confirmation_period_expired: "%{period}以内に確認する必要があります。新しくリクエストしてください。"
+      expired: "の有効期限が切れています。新しくリクエストしてください。"
+      not_already_confirmed: "はまだ承認されていません。"
+      not_found: "が見つかりません。"
+      not_locked: "はロックされていません。"
+      not_saved:
+        one: "エラーにより%{resource}を保存できませんでした。"
+        other: "%{count}個のエラーにより%{resource}を保存できませんでした。"
+
   activerecord:
+    errors:
+      messages:
+        record_invalid: "バリデーションに失敗しました: %{errors}"
+        restrict_dependent_destroy:
+          has_one: "%{record}が存在しているため削除できません"
+          has_many: "%{record}が存在しているため削除できません"
+        taken: "は既に存在します。"
+        blank: "を入力してください。"
+        present: "は入力しないでください。"
+        invalid: "は不正な値です。"
+        empty: "を入力してください。"
+        equal_to: "は%{count}に指定してください。"
+        greater_than: "は%{count}より大きい値に指定してください。"
+        greater_than_or_equal_to: "は%{count}以上の値に指定してください。"
+        less_than: "は%{count}より小さい値に指定してください。"
+        less_than_or_equal_to: "は%{count}以下の値に指定してください。"
+        other_than: "は%{count}以外の値に指定してください。"
+        odd: "は奇数に指定してください。"
+        even: "は偶数に指定してください。"
     attributes:
       user:
         name: "お名前"
@@ -9,6 +42,7 @@ ja:
       word:
         name: "単語"
         meaning: "意味"
+
   views:
     pagination:
       first: "&laquo; 最初"
@@ -16,4 +50,3 @@ ja:
       previous: "&lsaquo; 前"
       next: "次 &rsaquo;"
       truncate: "&hellip;"
-        
