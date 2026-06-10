@@ -1,24 +1,34 @@
-# README
+# 📖 Word App
+> **日本語単語学習および登録単語を活用したランダムクイズ生成ウェブサービス**
+> 
+> 🔗 **本番サービスリンク:** [https://word.asnica.work](https://word.asnica.work)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+---
 
-Things you may want to cover:
+## 🛠 1. 技術スタック (Tech Stack)
 
-* Ruby version
+| 区分 | 採用技術 |
+| :--- | :--- |
+| **Backend** | Ruby 3.2.2 (Production: 3.2.4), Ruby on Rails 8.1.3 |
+| **Frontend** | Stimulus, Hotwire (Turbo), Bootstrap 5 |
+| **Database** | PostgreSQL |
+| **Deployment** | AWS EC2 (Ubuntu), Puma Web Server, RVM |
 
-* System dependencies
+---
 
-* Configuration
+## 🚀 2. 主な機能 (Key Features)
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* **会員管理機能**
+  * **新規登録:** お名前、メールアドレス、パスワードによるアカウント作成。
+  * **ログイン:** メールアドレスとパスワードによる簡単ログイン。
+* **単語タグマスター**
+  * **一括登録:** タグを一度に複数作成可能な効率的な登録機能。
+  * **個別管理:** 作成済みタグの編集および削除機能。
+* **単語マスター**
+  * 学習対象となる単語の追加、編集、削除機能。
+  * タグによる絞り込み（フィルター）および検索オプション（全項目、単語名、意味、類義語）を選択可能な検索機能。
+* **問題集**
+  * 登録済みの全単語からランダムに10問を抽出。
+  * 実践的な学習ができる「3者択一形式（3択）」のクイズ自動生成システム。
+* **ランキング**
+  * 問題集の正解率（得点）を基準とした、ユーザー間のリアルタイムランキング確認機能。
