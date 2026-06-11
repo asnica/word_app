@@ -18,7 +18,7 @@
           <%= link_to tags_path, class: "btn btn-outline-primary flex-fill shadow-sm" do %>
             タグマスター
           <% end %>
-          <%= link_to words_path, class: "btn btn-primary flex-fill shadow-sm" do %>
+          <%= link_to words_path, data: { turbo: false }, class: "btn btn-primary flex-fill shadow-sm" do %>
             単語マスター
           <% end %>
         </div>
