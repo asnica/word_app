@@ -38,7 +38,7 @@ class Word < ApplicationRecord
       end
     end
 
-    words.distinct
+    words.distinct(created_at: :desc)
   end
 
   def self.to_csv
