@@ -21,10 +21,10 @@
               <%= hidden_field_tag :return_to, params[:return_to] %>
               
               <div class="text-center mb-5">
-                <h1 class="display-3 fw-bold text-dark mb-3"><%= @quiz_item.word.name %></h1>
+                <h1 class="display-3 fw-bold text-dark mb-3"><%= @quiz_item.word_name %></h1>
                 
-                <% if @quiz_item.word.synonym.present? %>
-                  <% clean_synonyms = @quiz_item.word.synonym.to_s.split(',').map(&:strip).reject(&:blank?).join(', ') %>
+                <% if @quiz_item.word_synonym.present? %>
+                  <% clean_synonyms = @quiz_item.word_synonym.to_s.split(',').map(&:strip).reject(&:blank?).join(', ') %>
                   <div class="mb-3">
                     <span class="text-muted small border-bottom pb-1">
                       <i class="bi bi-intersect"></i> 類義語: <%= clean_synonyms %>

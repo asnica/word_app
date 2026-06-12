@@ -22,7 +22,7 @@
                 <% @quiz_items.each do |item| %>
                   <tr style="cursor: pointer;" onclick="window.location='<%= quiz_path(@quiz, position: item.position, return_to: params[:return_to]) %>'">
                     <td class="px-4 fw-bold text-secondary"><%= item.position + 1 %></td>
-                    <td class="fw-bold fs-5"><%= item.word.name %></td>
+                    <td class="fw-bold fs-5"><%= item.word_name %></td>
                     <td>
                       <% if item.user_choice.present? %>
                         <span class="text-dark"><%= item.user_choice %></span>

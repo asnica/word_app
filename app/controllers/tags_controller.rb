@@ -9,10 +9,12 @@ class TagsController < ApplicationController
   end
 
   def create_tags
-    if current_user.update(user_params)
+    @user = current_user
+
+    if @user.update(user_params)
       redirect_to tags_path, notice: "タグを登録しました。"
     else
-      @tags = Tag.order(created_at: :desc).page(params[:page]).per(10)
+      @tags = Tag.search(params[:query]).order(created_at: :desc).page(params[:page]).per(10)
       render :index, status: :unprocessable_entity
     end
   end

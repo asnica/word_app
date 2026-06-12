@@ -39,10 +39,16 @@ ja:
         email: "メールアドレス"
         password: "パスワード"
         password_confirmation: "パスワード（確認）"
+        tags: "タグ"
       word:
         name: "単語"
         meaning: "意味"
-
+      tag:
+        name: "タグ名"
+    models:
+      user: "ユーザー"
+      word: "単語"
+      tag: "タグ"
   views:
     pagination:
       first: "&laquo; 最初"

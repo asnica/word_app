@@ -1,4 +1,5 @@
 class Word < ApplicationRecord
+  default_scope { where(deleted: 0) }
   has_one_attached :image
   belongs_to :user
   has_many :word_tags, dependent: :destroy
@@ -9,7 +10,7 @@ class Word < ApplicationRecord
   before_save :purge_image, if: -> { remove_image == '1' }
 
   # バリデーションの設定
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: { conditions: -> { where(deleted: 0) } }
   validates :meaning, presence: true
   validates :image, content_type: [:png, :jpg, :jpeg, :gif],
                     size: { less_than: 5.megabytes }
@@ -63,6 +64,10 @@ class Word < ApplicationRecord
         ]
       end
     end
+  end
+
+  def soft_delete
+    update(deleted: 1, deleted_at: Time.current)
   end
 
   private
