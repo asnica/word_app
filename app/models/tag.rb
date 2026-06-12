@@ -3,7 +3,7 @@ class Tag < ApplicationRecord
   has_many :word_tags, dependent: :destroy
   has_many :words, dependent: :nullify
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   def self.search(search_word)
     if search_word.present?

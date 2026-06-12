@@ -20,7 +20,8 @@ class QuizzesController < ApplicationController
     if params[:position].present?
       @quiz.update(current_question_index: params[:position].to_i)
     end
-    @quiz_item = @quiz.quiz_items.find_by(position: @quiz.current_question_index)
+
+    @quiz_item = QuizItem.find_by(quiz_id: @quiz.id, position: @quiz.current_question_index)
 
     if @quiz_item.nil?
       redirect_to review_quiz_path(@quiz, return_to: params[:return_to]) and return
@@ -28,9 +29,9 @@ class QuizzesController < ApplicationController
   end
 
   def answer
-    @quiz_item = @quiz.quiz_items.find_by(position: @quiz.current_question_index)
+    @quiz_item = QuizItem.find_by(quiz_id: @quiz.id, position: @quiz.current_question_index)
 
-    is_correct = (params[:answer] == @quiz_item.word.meaning)
+    is_correct = (params[:answer] == @quiz_item.word_meaning)
     @quiz_item.update(user_choice: params[:answer], is_correct: is_correct)
 
     @quiz.increment!(:current_question_index)

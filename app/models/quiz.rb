@@ -12,9 +12,9 @@ class Quiz < ApplicationRecord
 
     random_words.each_with_index do |word, index|
       distractors = Word.where.not(id: word.id).order("RANDOM()").limit(2).pluck(:meaning)
-      shuffled = (distractors + [word.meaning]).shuffle.join(",")
+      shuffled_array = (distractors + [word.meaning]).shuffle
 
-      quiz.quiz_items.create(word: word, position: index, choice_list: shuffled)
+      quiz.quiz_items.create(word: word, position: index, choice_list: shuffled_array, word_name: word.name, word_meaning: word.meaning, word_synonym: word.synonym)
     end
 
     quiz
@@ -25,12 +25,20 @@ class Quiz < ApplicationRecord
   end
 
   def restart_new_attempt
-    new_quiz = Quiz.create!(user: self.user, status: :ongoing, current_question_index: 0, total_score: 0)
+    transaction do
+      new_quiz = Quiz.create!(user: self.user, status: :ongoing, current_question_index: 0, total_score: 0)
 
-    self.quiz_items.each do |item|
-      new_quiz.quiz_items.create(word: item.word, position: item.position, choice_list: item.choice_list)
+      self.quiz_items.order(:position).each_with_index do |item, index|
+        new_quiz.quiz_items.create!(
+          word_id: item.word_id,
+          position: index,
+          choice_list: item.choice_list,
+          word_name: item.word_name,
+          word_meaning: item.word_meaning,
+          word_synonym: item.word_synonym
+          )
+      end
+      new_quiz
     end
-
-    new_quiz
   end
 end

@@ -28,7 +28,7 @@
 
                     <td class="px-4 fw-bold text-secondary" style="width: 10%"><%= item.position + 1 %></td>
 
-                    <td class="fw-bold fs-5" style="width: 25%"><%= item.word.name %></td>
+                    <td class="fw-bold fs-5" style="width: 25%"><%= item.word_name %></td>
 
                     <td style="width: 50%">
                       <% if item.is_correct %>
@@ -38,7 +38,7 @@
                           <%= item.user_choice.presence || "未回答" %>
                         </span>
                         <span class="text-success fw-bold small d-block">
-                          <i class="bi bi-arrow-return-right"></i> 正解: <%= item.word.meaning %>
+                          <i class="bi bi-arrow-return-right"></i> 正解: <%= item.word_meaning %>
                         </span>
                       <% end %>
                     </td>

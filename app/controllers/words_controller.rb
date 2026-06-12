@@ -27,6 +27,7 @@ class WordsController < ApplicationController
 
   def create
     @word = current_user.words.build(word_params)
+    
     if @word.save
       redirect_to words_path, notice: "単語を登録しました。"
     else
@@ -47,7 +48,7 @@ class WordsController < ApplicationController
   end
 
   def destroy
-    @word.destroy
+    @word.soft_delete
     redirect_to params[:return_to] || words_path, notice: "単語を削除しました。", status: :see_other
   rescue ActiveRecord::InvalidForeignKey
     redirect_to params[:return_to] || words_path, alert: "この単語は問題集で使用されているため、削除できません。"

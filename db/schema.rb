@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_18_083353) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_12_065338) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,6 +51,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_083353) do
     t.datetime "updated_at", null: false
     t.string "user_choice"
     t.bigint "word_id", null: false
+    t.string "word_meaning"
+    t.string "word_name"
+    t.string "word_synonym"
     t.index ["quiz_id"], name: "index_quiz_items_on_quiz_id"
     t.index ["word_id"], name: "index_quiz_items_on_word_id"
   end
@@ -92,6 +95,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_083353) do
 
   create_table "words", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "deleted", default: 0, null: false, comment: "削除フラグ(0=>未削除,1=>削除)"
+    t.datetime "deleted_at", comment: "削除日時"
     t.string "meaning"
     t.string "name"
     t.text "note"
@@ -99,6 +104,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_083353) do
     t.string "tag_id"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["deleted"], name: "index_words_on_deleted"
     t.index ["user_id"], name: "index_words_on_user_id"
   end
 
